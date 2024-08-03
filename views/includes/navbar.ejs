@@ -1,0 +1,62 @@
+<body class="bg-gray-100">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <div class="mb-5">
+        <nav class="bg-white shadow-lg sticky top-0">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Website name/logo -->
+                    <div class="flex-shrink-0">
+                        <a href="/listings" class="font-bold text-xl text-gray-800">VillaVenture</a>
+                    </div>
+                    <!-- Menu links -->
+                    <div class="hidden md:flex md:items-center md:space-x-6">
+                        <a href="/listings" class="nav-link text-gray-600 hover:text-blue-600">Listings</a>
+                        <% if(currentUser) { %>
+                            <a href="/listings/new" class="nav-link text-gray-600 hover:text-blue-600">Create Listing</a>
+                            <a href="/listings/new" class="nav-link text-gray-600 hover:text-blue-600">Profile</a>
+                        <% } %>
+                        
+                    </div>
+                    <% if(currentUser) { %>
+                        <div class="hidden md:flex md:items-center">
+                            <a href="/logout" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-all duration-300">Logout</a>
+                        </div>
+                    <% } else {%>
+                        <div class="hidden md:flex md:items-center">
+                            <a href="/signup" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-all duration-300">Getting Started</a>
+                        </div>
+                    <% } %>
+
+                    <!-- Hamburger menu button for mobile -->
+                    <div class="md:hidden flex items-center">
+                        <button class="hamburger block text-gray-800 focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                
+              </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="menu md:hidden bg-white">
+                <a href="/listings" class="menu-link block py-3 px-4 text-gray-800 hover:bg-gray-100 transition-colors">Listings</a>
+                <a href="/listings/new" class="menu-link block py-3 px-4 text-gray-800 hover:bg-gray-100 transition-colors">Add Listing</a>
+                <% if(currentUser) { %>
+                    <a href="#" class="menu-link block py-3 px-4 text-gray-800 hover:bg-gray-100 transition-colors">Profile</a>
+                    <a href="/logout" class="menu-link block py-3 px-4 text-gray-800 hover:bg-gray-100 transition-colors">Logout</a>
+                <% } %>
+                <% if(!currentUser) { %>
+                    <a href="/signup" class="menu-link block py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold text-center transition-colors">Get Started</a>
+                <% } %>
+            </div>
+        </nav>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <script src="/js/navbar.js"></script>
+</body>
+</html>
