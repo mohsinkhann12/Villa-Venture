@@ -3,48 +3,68 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const MAP_TOKEN = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: MAP_TOKEN });
 
+const animaties_arrray = [
+    'pools',
+    'villa',
+    'apartment',
+    'mountain',
+    'climbing',
+    'farms',
+];
+
 module.exports.index = async (req, res) => {
-    const animaties_arrray = [
-        'pools',
-        'villa',
-        'apartment',
-        'mountain',
-        'climbing',
-        'farms',]
+    
 
-  try {
-      // Construct filter options based on query parameters
-      const filterOptions = {};
-      if (req.query.amenity) {
-          filterOptions.amenities = req.query.amenity; // Directly use the amenity string to filter
-      }
+    try {
+        // Construct filter options based on query parameters
+        const filterOptions = {};
+        const searchQuery = req.query.search || ''; // Get the search query
+        const currentAmenity = req.query.amenity || ''; // Get the selected amenity filter
 
-      const allListings = await Listing.find(filterOptions).populate("reviews");
-      allListings.forEach(listing => {
-          if (listing.reviews.length > 0) {
-              // Calculate average rating
-              const noOfRatings = listing.reviews.length;
-              const totalRating = listing.reviews.reduce((acc, review) => acc + review.rating, 0);
-              const averageRating = totalRating / noOfRatings;
-              listing.averageRating = `☆ ${averageRating.toFixed(1)} (${noOfRatings} reviews)`; // Add averageRating to each listing
-          } else {
-              listing.averageRating = "";
-          }
-      });
+        if (searchQuery) {
+            // Construct a regular expression for case-insensitive search
+            const searchRegex = new RegExp(searchQuery, 'i');
+            filterOptions.$or = [
+                { location: searchRegex },
+                { country: searchRegex },
+                { title: searchRegex }
+            ];
+        }
 
-      // Check if there are no listings returned
-      if (allListings.length === 0) {
-          req.flash("error", "No listings found matching your criteria."); // Flash an informational message
-          res.redirect('/listings'); // Redirect back to listings page
-      } else {
-          res.render("listings/index.ejs", { allListings,animaties_arrray,currentAmenity: req.query.amenity });
-      }
-  } catch (err) {
-      console.error("Error fetching listings:", err);
-      req.flash("error", "Error fetching listings");
-      res.status(500).redirect('/listings'); // Redirect with an error message
-  }
+        if (currentAmenity) {
+            // Add amenity filter
+            filterOptions.amenities = currentAmenity;
+        }
+
+        // Find listings based on filter options
+        const allListings = await Listing.find(filterOptions).populate("reviews");
+        allListings.forEach(listing => {
+            if (listing.reviews.length > 0) {
+                // Calculate average rating
+                const noOfRatings = listing.reviews.length;
+                const totalRating = listing.reviews.reduce((acc, review) => acc + review.rating, 0);
+                const averageRating = totalRating / noOfRatings;
+                listing.averageRating = `☆ ${averageRating.toFixed(1)} (${noOfRatings} reviews)`; // Add averageRating to each listing
+            } else {
+                listing.averageRating = "";
+            }
+        });
+
+        // Check if there are no listings returned
+        if (allListings.length === 0) {
+            req.flash("error", "No listings found matching your criteria."); // Flash an informational message
+            res.redirect('/listings'); // Redirect back to listings page
+        } else {
+            res.render("listings/index.ejs", { allListings, animaties_arrray, currentAmenity });
+        }
+    } catch (err) {
+        console.error("Error fetching listings:", err);
+        req.flash("error", "Error fetching listings");
+        res.status(500).redirect('/listings'); // Redirect with an error message
+    }
 }
+
+
 
 
 
@@ -132,6 +152,15 @@ module.exports.updateListing = async(req,res)=>{
         return res.redirect(`/listings/${id}`);
     }
 
+    // Ensure amenities is always an array
+    if (req.body.listing.amenities) {
+        if (!Array.isArray(req.body.listing.amenities)) {
+            req.body.listing.amenities = [req.body.listing.amenities];
+        }
+    } else {
+        req.body.listing.amenities = []; // Default to empty array if no amenities provided
+    }
+
     let updatedListing = await Listing.findByIdAndUpdate(id,{...req.body.listing});
 
     if(typeof req.file !== "undefined"){
@@ -141,8 +170,6 @@ module.exports.updateListing = async(req,res)=>{
         await updatedListing.save();
     }
     
-
-
     req.flash("success","Successfully updated listing!");
     res.redirect(`/listings/${id}`);
 }
