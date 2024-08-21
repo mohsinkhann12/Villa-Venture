@@ -87,7 +87,7 @@
         <div class="grid gap-12"></div>
         <% for(let animate of listing.amenities) { %>
             <a href="/listings?amenity=<%= animate %>" class="inline-block">
-                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-white hover:scale-105 active:bg-blue-700 active:text-white h-10 px-4 py-2">
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-blue-600 hover:scale-105 active:bg-blue-700 active:text-blue-600 h-10 px-4 py-2">
                     <%= animate.toUpperCase() %>
                 </button>
             </a>
@@ -105,7 +105,7 @@
           <h2 class="text-3xl font-bold tracking-tight">Add a Review</h2>
           <form class="mt-6 grid gap-6" action="/listings/<%= listing.id %>/reviews" method="POST">
 
-    <label for="rating" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Review</label>
+    <label for="rating" class="block mb-2 text-sm font-medium text-black dark:text-white">Review</label>
     <input id="rating" name="review[rating]" type="range" min="0" max="5" value="2" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" required>
 
             <div>
@@ -126,7 +126,7 @@
               ></textarea>
             </div>
             <button
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full sm:w-auto"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-gray-200 text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full sm:w-auto"
               type="submit"
             >
               Submit Review
@@ -164,14 +164,14 @@
                             class="w-4 h-4"
                           >
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-                              fill="<%= review.rating > i ? 'blue' : 'white' %>"
+                              fill="<%= review.rating > i ? 'blue' : 'gray' %>"
                             />
                           </svg>
                         <% } %>
                       </div>
                     </div>
                   </div>
-                  <div class="text-sm leading-loose text-gray-500 dark:text-gray-400">
+                  <div class="text-sm leading-loose text-gray-800 dark:text-gray-400">
                     <p><%= review.comment %></p>
                   </div>
                   <% if(currentUser && currentUser._id.equals(review.author._id)) { %>
