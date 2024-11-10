@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const initData =  require('./data');
 const Listing = require("../models/listing.js");
-const MONGO_URL = "mongodb+srv://kiraPersonalDB:KiraDB2023@cluster0.qm8bgzb.mongodb.net/villa-venture";
+const MONGO_URL = "";
 
 main().then(()=>{
     console.log("Connected to DB");
